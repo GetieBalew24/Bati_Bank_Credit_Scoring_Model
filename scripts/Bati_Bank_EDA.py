@@ -126,3 +126,19 @@ class ExploratoryDataAnalysis:
         print("\nMissing Values Analysis:")
         print(missing_values)
         logging.info("Missing values per column: %s", missing_values.to_dict())
+    
+    def outlier_detection(self, numerical_cols):
+        """
+        Detects and visualizes outliers in numerical columns using box plots.
+        """
+        logging.info("Detecting outliers for columns: %s", numerical_cols)
+        for col in numerical_cols:
+            try:
+                plt.figure(figsize=(10, 6))
+                sns.boxplot(data=self.df, y=col)
+                plt.title(f'Boxplot of {col}')
+                plt.ylabel(col)
+                plt.show()
+            except Exception as e:
+                logging.error("Error detecting outliers for column %s: %s", col, e)
+
