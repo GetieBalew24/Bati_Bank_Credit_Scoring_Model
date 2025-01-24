@@ -42,3 +42,15 @@ class FeatureEngineering:
         self.df['Transaction_Count'] = self.df.groupby('CustomerId')['TransactionId'].transform('count')
         self.df['Std_Transaction_Amount'] = self.df.groupby('CustomerId')['Amount'].transform('std')
         return self.df
+    def extract_temporal_features(self):
+        """
+        Extracts temporal features from the transaction timestamp.
+
+        Returns:
+            pd.DataFrame: DataFrame with new temporal feature columns.
+        """
+        self.df['Transaction_Hour'] = self.df['TransactionStartTime'].dt.hour
+        self.df['Transaction_Day'] = self.df['TransactionStartTime'].dt.day
+        self.df['Transaction_Month'] = self.df['TransactionStartTime'].dt.month
+        self.df['Transaction_Year'] = self.df['TransactionStartTime'].dt.year
+        return self.df
