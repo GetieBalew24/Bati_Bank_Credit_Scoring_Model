@@ -1,0 +1,2 @@
+2025-01-24 14:41:36,890 - INFO - ExploratoryDataAnalysis initialized with DataFrame of shape (95662, 16)
+2025-01-24 14:41:36,891 - INFO - Fetching the first five rows of the DataFrame.
