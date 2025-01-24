@@ -103,51 +103,32 @@ class FeatureEngineering:
         Returns:
             pd.DataFrame: DataFrame after encoding categorical variables.
         """
-        if encoding_type == 'onehot':
-            self.df = pd.get_dummies(self.df, columns=['ProviderId', 'ProductId', 'ProductCategory', 'ChannelId'], drop_first=False)
-            # Ensure only boolean columns are converted to integers
-            bool_cols = self.df.select_dtypes(include='bool').columns.tolist()
-            self.df[bool_cols] = self.df[bool_cols].astype(int)
-            # Rename the encoded columns for better readablity
-            self.df.rename(columns={'ProviderId_ProviderId_1':'ProviderId1',
-                                    'ProviderId_ProviderId_2':'ProviderId2',
-                                    'ProviderId_ProviderId_3':'ProviderId3',
-                                    'ProviderId_ProviderId_4':'ProviderId4',
-                                    'ProviderId_ProviderId_5':'ProviderId5',
-                                    'ProviderId_ProviderId_6':'ProviderId6',
-                                    'ProductId_ProductId_1' :'ProductId1',
-                                    'ProductId_ProductId_2' :'ProductId2',
-                                    'ProductId_ProductId_3' :'ProductId3',
-                                    'ProductId_ProductId_4' :'ProductId4',
-                                    'ProductId_ProductId_5' :'ProductId5',
-                                    'ProductId_ProductId_6' :'ProductId6',
-                                    'ProductId_ProductId_7' :'ProductId7',
-                                    'ProductId_ProductId_8' :'ProductId8',
-                                    'ProductId_ProductId_9' :'ProductId9',
-                                    'ProductId_ProductId_10' :'ProductId10',
-                                    'ProductId_ProductId_11' :'ProductId11',
-                                    'ProductId_ProductId_12' :'ProductId12',
-                                    'ProductId_ProductId_13' :'ProductId13',
-                                    'ProductId_ProductId_14' :'ProductId14',
-                                    'ProductId_ProductId_15' :'ProductId15',
-                                    'ProductId_ProductId_16' :'ProductId16',
-                                    'ProductId_ProductId_19' :'ProductId19',
-                                    'ProductId_ProductId_20' :'ProductId20',
-                                    'ProductId_ProductId_21' :'ProductId21',
-                                    'ProductId_ProductId_22' :'ProductId22',
-                                    'ProductId_ProductId_23' :'ProductId23',
-                                    'ProductId_ProductId_24' :'ProductId24',
-                                    'ProductId_ProductId_27' :'ProductId27',
-                                    'ChannelId_ChannelId_1':'ChannelId1',
-                                    'ChannelId_ChannelId_2':'ChannelId2',
-                                    'ChannelId_ChannelId_3':'ChannelId3',
-                                    'ChannelId_ChannelId_5':'ChannelId5',}, inplace=True)
-        elif encoding_type == 'label':
-            le = LabelEncoder()
-            categorical_cols = ['ProviderId', 'ProductId', 'ProductCategory', 'ChannelId']
-            for col in categorical_cols:
-                self.df[col] = le.fit_transform(self.df[col])
+        # Define the list of categorical columns to encode
+        categorical_cols = ['ProviderId', 'ProductId', 'ProductCategory', 'ChannelId']
         
+        # Ensure the specified columns exist in the DataFrame
+        existing_cols = [col for col in categorical_cols if col in self.df.columns]
+        if not existing_cols:
+            print("No categorical columns found for encoding.")
+            return self.df
+
+        if encoding_type == 'onehot':
+            # Apply one-hot encoding
+            self.df = pd.get_dummies(self.df, columns=existing_cols, drop_first=False)
+            
+            # Ensure any boolean columns are converted to integers
+            bool_cols = self.df.select_dtypes(include='bool').columns
+            self.df[bool_cols] = self.df[bool_cols].astype(int)
+
+        elif encoding_type == 'label':
+            # Apply label encoding
+            le = LabelEncoder()
+            for col in existing_cols:
+                self.df[col] = le.fit_transform(self.df[col])
+
+        else:
+            raise ValueError(f"Unsupported encoding type: {encoding_type}. Choose 'onehot' or 'label'.")
+
         return self.df
     
     def scale_numerical_features(self, scaling_type='normalization'):
@@ -169,3 +150,26 @@ class FeatureEngineering:
 
         self.df[numeric_cols] = scaler.fit_transform(self.df[numeric_cols])
         return self.df
+    def run_feature_engineering(self):
+        """
+        Runs the full feature engineering pipeline on the DataFrame.
+
+        Returns:
+            pd.DataFrame: Final DataFrame after all feature engineering steps.
+        """
+        self.remove_high_missing_values(threshold=0.5)
+        self.create_aggregate_features()
+        self.extract_temporal_features()
+        self.handle_missing_values(method='imputation', strategy='mean')
+        self.encode_categorical_variables(encoding_type='onehot')
+        self.scale_numerical_features(scaling_type='normalization')
+        return self.df
+    def save_processed_data(self, file_path):
+        """
+        Saves the processed DataFrame to a specified file path.
+
+        Args:
+            file_path (str): The file path to save the processed DataFrame.
+        """
+        self.df.to_csv(file_path, index=False)
+        print(f"Processed data saved to {file_path}")
