@@ -54,3 +54,42 @@ class FeatureEngineering:
         self.df['Transaction_Month'] = self.df['TransactionStartTime'].dt.month
         self.df['Transaction_Year'] = self.df['TransactionStartTime'].dt.year
         return self.df
+    def handle_missing_values(self, method='imputation', strategy='mean', numerical_cols=None, categorical_cols=None):
+        """
+        Handles missing values in the DataFrame using specified methods.
+
+        Args:
+            method (str): The method to handle missing values ('imputation' or 'removal').
+            strategy (str): The strategy for imputation ('mean', 'median', or 'mode').
+            numerical_cols (list, optional): List of numerical columns to process.
+            categorical_cols (list, optional): List of categorical columns to process.
+
+        Returns:
+            pd.DataFrame: DataFrame after handling missing values.
+        """
+        if numerical_cols is None:
+            numerical_cols = self.df.select_dtypes(include=['float64', 'int']).columns.tolist()
+        
+        if categorical_cols is None:
+            categorical_cols = self.df.select_dtypes(include=['object']).columns.tolist()
+
+        # Handle numerical missing values
+        if method == 'imputation':
+            for col in numerical_cols:
+                if strategy == 'mean':
+                    self.df[col].fillna(self.df[col].mean(), inplace=True)
+                elif strategy == 'median':
+                    self.df[col].fillna(self.df[col].median(), inplace=True)
+                elif strategy == 'mode':
+                    self.df[col].fillna(self.df[col].mode().iloc[0], inplace=True)
+        elif method == 'removal':
+            self.df.dropna(subset=numerical_cols, inplace=True)
+
+        # Handle categorical missing values
+        for col in categorical_cols:
+            if method == 'imputation':
+                self.df[col].fillna(self.df[col].mode().iloc[0], inplace=True)  # Filling with mode for categorical
+            elif method == 'removal':
+                self.df.dropna(subset=categorical_cols, inplace=True)
+
+        return self.df
