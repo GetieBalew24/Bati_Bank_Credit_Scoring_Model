@@ -53,3 +53,34 @@ class ExploratoryDataAnalysis:
         logging.info("Calculating summary statistics.")
         print("\nSummary Statistics:")
         print(self.df.describe())
+    def plot_numerical_distribution(self, numerical_cols):
+        """
+        Visualizes the distribution of numerical features using histograms with and without 
+        outlier handling and applying log transformation.
+        """
+        logging.info("Plotting numerical distributions for columns: %s", numerical_cols)
+        for col in numerical_cols:
+            try:
+                plt.figure(figsize=(12, 5))
+                
+                # Original Data Distribution
+                plt.subplot(1, 2, 1)
+                sns.histplot(self.df[col], bins=30, kde=True)
+                plt.title(f'Distribution of {col} (Original)')
+                plt.xlabel(col)
+                plt.ylabel('Frequency')
+                plt.grid(True)
+
+                # Log Transformed Data Distribution
+                log_transformed_data = np.log1p(self.df[col])
+                plt.subplot(1, 2, 2)
+                sns.histplot(log_transformed_data, bins=30, kde=True)
+                plt.title(f'Distribution of {col} (Log Scale)')
+                plt.xlabel(f'Log of {col}')
+                plt.ylabel('Frequency')
+                plt.grid(True)
+
+                plt.tight_layout()
+                plt.show()
+            except Exception as e:
+                logging.error("Error plotting numerical distribution for column %s: %s", col, e)
