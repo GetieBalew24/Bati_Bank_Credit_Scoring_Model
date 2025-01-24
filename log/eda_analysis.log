@@ -1,12 +1,15 @@
-2025-01-24 15:02:29,171 - INFO - ExploratoryDataAnalysis initialized with DataFrame of shape (95662, 16)
-2025-01-24 15:02:29,173 - INFO - Fetching the first five rows of the DataFrame.
-2025-01-24 15:02:29,232 - INFO - Displaying dataset overview.
-2025-01-24 15:02:29,279 - INFO - Calculating summary statistics.
-2025-01-24 15:02:29,377 - INFO - Plotting numerical distributions for columns: ['Amount', 'Value']
-2025-01-24 15:02:31,366 - INFO - Plotting categorical distributions for columns: ['ChannelId', 'ProductCategory', 'CountryCode', 'ProductId', 'PricingStrategy', 'FraudResult']
-2025-01-24 15:02:31,899 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
-2025-01-24 15:02:31,947 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
-2025-01-24 15:02:32,596 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
-2025-01-24 15:02:32,688 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
-2025-01-24 15:02:33,028 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
-2025-01-24 15:02:33,078 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:41,873 - INFO - ExploratoryDataAnalysis initialized with DataFrame of shape (95662, 16)
+2025-01-24 15:11:41,874 - INFO - Fetching the first five rows of the DataFrame.
+2025-01-24 15:11:41,912 - INFO - Displaying dataset overview.
+2025-01-24 15:11:41,943 - INFO - Calculating summary statistics.
+2025-01-24 15:11:42,016 - INFO - Plotting numerical distributions for columns: ['Amount', 'Value']
+2025-01-24 15:11:43,651 - INFO - Plotting categorical distributions for columns: ['ChannelId', 'ProductCategory', 'CountryCode', 'ProductId', 'PricingStrategy', 'FraudResult']
+2025-01-24 15:11:44,201 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:44,245 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:44,687 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:44,727 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:44,871 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:44,908 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:11:44,993 - INFO - Performing correlation analysis.
+2025-01-24 15:11:45,154 - INFO - Analyzing missing values.
+2025-01-24 15:11:45,267 - INFO - Missing values per column: {'TransactionId': 0, 'BatchId': 0, 'AccountId': 0, 'SubscriptionId': 0, 'CustomerId': 0, 'CurrencyCode': 0, 'CountryCode': 0, 'ProviderId': 0, 'ProductId': 0, 'ProductCategory': 0, 'ChannelId': 0, 'Amount': 0, 'Value': 0, 'TransactionStartTime': 0, 'PricingStrategy': 0, 'FraudResult': 0}

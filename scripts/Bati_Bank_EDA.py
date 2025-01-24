@@ -101,3 +101,28 @@ class ExploratoryDataAnalysis:
                 plt.show()
             except Exception as e:
                 logging.error("Error plotting categorical distribution for column %s: %s", col, e)
+    def correlation_analysis(self):
+        """
+        Performs correlation analysis on numerical features and visualizes
+        the correlation matrix using a heatmap.
+        """
+        logging.info("Performing correlation analysis.")
+        try:
+            numerical_cols = self.df.select_dtypes(include=['float64', 'int64']).columns
+            corr_matrix = self.df[numerical_cols].corr()
+            plt.figure(figsize=(12, 8))
+            sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+            plt.title('Correlation Matrix of Numerical Features')
+            plt.show()
+        except Exception as e:
+            logging.error("Error performing correlation analysis: %s", e)
+
+    def missing_values_analysis(self):
+        """
+        Identifies and visualizes missing values in the dataset.
+        """
+        logging.info("Analyzing missing values.")
+        missing_values = self.df.isnull().sum()
+        print("\nMissing Values Analysis:")
+        print(missing_values)
+        logging.info("Missing values per column: %s", missing_values.to_dict())
