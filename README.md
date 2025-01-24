@@ -31,3 +31,7 @@ The data used in this project contains transactional information, including:
 - `TransactionStartTime`: Start time of the transaction
 - `PricingStrategy`: Pricing structure category
 - `FraudResult`: Fraud detection result (1 - Fraud, 0 - No Fraud)
+
+## Features
+1. **Exploratory Data Analysis (EDA)**:
+   - Understand the structure of the dataset, summary statistics, distribution of features, correlation analysis, missing value identification, and outlier detection.
