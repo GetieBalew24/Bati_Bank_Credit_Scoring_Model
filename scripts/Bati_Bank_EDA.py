@@ -84,3 +84,20 @@ class ExploratoryDataAnalysis:
                 plt.show()
             except Exception as e:
                 logging.error("Error plotting numerical distribution for column %s: %s", col, e)
+    
+    def categorical_distribution(self, categorical_cols):
+        """
+        Visualizes the distribution of categorical features using count plots.
+        """
+        logging.info("Plotting categorical distributions for columns: %s", categorical_cols)
+        for col in categorical_cols:
+            try:
+                plt.figure(figsize=(10, 6))
+                sns.countplot(data=self.df, x=col, palette='Set2')
+                plt.title(f'Distribution of {col}')
+                plt.xticks(rotation=45)
+                plt.xlabel(col)
+                plt.ylabel('Count')
+                plt.show()
+            except Exception as e:
+                logging.error("Error plotting categorical distribution for column %s: %s", col, e)
