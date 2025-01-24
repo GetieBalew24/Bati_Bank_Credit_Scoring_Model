@@ -149,3 +149,23 @@ class FeatureEngineering:
                 self.df[col] = le.fit_transform(self.df[col])
         
         return self.df
+    
+    def scale_numerical_features(self, scaling_type='normalization'):
+        """
+        Scales numerical features using the specified scaling method.
+
+        Args:
+            scaling_type (str): The scaling method ('normalization' or 'standardization').
+
+        Returns:
+            pd.DataFrame: DataFrame after scaling numerical features.
+        """
+        numeric_cols = ['Amount', 'Value', 'Total_Transaction_Amount', 'Avg_Transaction_Amount', 'Std_Transaction_Amount']
+        
+        if scaling_type == 'normalization':
+            scaler = MinMaxScaler()
+        elif scaling_type == 'standardization':
+            scaler = StandardScaler()
+
+        self.df[numeric_cols] = scaler.fit_transform(self.df[numeric_cols])
+        return self.df
