@@ -1,0 +1,16 @@
+2025-01-24 15:17:53,506 - INFO - ExploratoryDataAnalysis initialized with DataFrame of shape (95662, 16)
+2025-01-24 15:17:53,507 - INFO - Fetching the first five rows of the DataFrame.
+2025-01-24 15:17:53,554 - INFO - Displaying dataset overview.
+2025-01-24 15:17:53,584 - INFO - Calculating summary statistics.
+2025-01-24 15:17:53,658 - INFO - Plotting numerical distributions for columns: ['Amount', 'Value']
+2025-01-24 15:17:55,806 - INFO - Plotting categorical distributions for columns: ['ChannelId', 'ProductCategory', 'CountryCode', 'ProductId', 'PricingStrategy', 'FraudResult']
+2025-01-24 15:17:56,449 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:17:56,498 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:17:57,005 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:17:57,051 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:17:57,333 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:17:57,462 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-24 15:17:57,650 - INFO - Performing correlation analysis.
+2025-01-24 15:17:57,994 - INFO - Analyzing missing values.
+2025-01-24 15:17:58,082 - INFO - Missing values per column: {'TransactionId': 0, 'BatchId': 0, 'AccountId': 0, 'SubscriptionId': 0, 'CustomerId': 0, 'CurrencyCode': 0, 'CountryCode': 0, 'ProviderId': 0, 'ProductId': 0, 'ProductCategory': 0, 'ChannelId': 0, 'Amount': 0, 'Value': 0, 'TransactionStartTime': 0, 'PricingStrategy': 0, 'FraudResult': 0}
+2025-01-24 15:17:58,095 - INFO - Detecting outliers for columns: ['Amount', 'Value']
