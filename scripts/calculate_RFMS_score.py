@@ -75,3 +75,19 @@ class RFMSRiskClassifier:
             logging.error('Error calculating monetary value: %s', e)
         
         return self.df
+    def calculate_seasonality(self):
+        """
+        Calculate the seasonality (number of unique transaction months) for each customer.
+
+        Returns:
+        - DataFrame with a new column 'Seasonality' representing the unique months of transactions for each customer.
+        """
+        logging.info('Calculating seasonality...')
+        try:
+            self.df['Transaction_Month'].fillna(0, inplace=True)
+            self.df['Seasonality'] = self.df.groupby('CustomerId')['Transaction_Month'].transform(lambda x: x.nunique())
+            logging.info('Seasonality calculation successful, resulting dataframe shape: %s', self.df.shape)
+        except Exception as e:
+            logging.error('Error calculating seasonality: %s', e)
+        
+        return self.df
