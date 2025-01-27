@@ -108,3 +108,22 @@ class RFMSRiskClassifier:
             logging.error('Error normalizing RFMS: %s', e)
         
         return self.df
+    def assign_risk_category(self, threshold=0.25):
+        """
+        Assign risk categories based on RFMS scores.
+
+        Parameters:
+        - threshold: A threshold value to classify customers as 'good' or 'bad'.
+
+        Returns:
+        - DataFrame with a new column 'Risk_category' containing the risk classification.
+        """
+        logging.info('Assigning risk category based on RFMS scores...')
+        try:
+            self.df['RFMS_score'] = self.df[['Recency', 'Frequency', 'Monetary', 'Seasonality']].mean(axis=1)
+            self.df['Risk_category'] = self.df['RFMS_score'].apply(lambda x: 'good' if x >= threshold else 'bad')
+            logging.info('Risk category assignment successful, resulting dataframe shape: %s', self.df.shape)
+        except Exception as e:
+            logging.error('Error assigning risk category: %s', e)
+        
+        return self.df
