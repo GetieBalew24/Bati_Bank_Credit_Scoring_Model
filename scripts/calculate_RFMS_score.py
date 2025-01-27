@@ -45,3 +45,18 @@ class RFMSRiskClassifier:
             logging.error('Error calculating recency: %s', e)
         
         return self.df
+    def calculate_frequency(self):
+        """
+        Calculate the frequency (transaction count) for each customer.
+
+        Returns:
+        - DataFrame with a new column 'Frequency' representing the transaction count for each customer.
+        """
+        logging.info('Calculating frequency...')
+        try:
+            self.df['Frequency'] = self.df['Transaction_Count']
+            logging.info('Frequency calculation successful, resulting dataframe shape: %s', self.df.shape)
+        except Exception as e:
+            logging.error('Error calculating frequency: %s', e)
+        
+        return self.df
