@@ -60,3 +60,18 @@ class RFMSRiskClassifier:
             logging.error('Error calculating frequency: %s', e)
         
         return self.df
+    def calculate_monetary(self):
+        """
+        Calculate the monetary value (total transaction amount) for each customer.
+
+        Returns:
+        - DataFrame with a new column 'Monetary' representing the total transaction amount for each customer.
+        """
+        logging.info('Calculating monetary value...')
+        try:
+            self.df['Monetary'] = self.df.groupby('CustomerId')['Total_Transaction_Amount'].transform('sum')
+            logging.info('Monetary calculation successful, resulting dataframe shape: %s', self.df.shape)
+        except Exception as e:
+            logging.error('Error calculating monetary value: %s', e)
+        
+        return self.df
