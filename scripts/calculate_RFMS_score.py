@@ -91,3 +91,20 @@ class RFMSRiskClassifier:
             logging.error('Error calculating seasonality: %s', e)
         
         return self.df
+    def normalize_rfms(self):
+        """
+        Normalize the RFMS (Recency, Frequency, Monetary, Seasonality) columns to a 0-1 scale.
+
+        Returns:
+        - DataFrame with normalized RFMS columns.
+        """
+        logging.info('Normalizing RFMS columns...')
+        try:
+            rfms_columns = ['Recency', 'Frequency', 'Monetary', 'Seasonality']
+            self.df[rfms_columns] = self.df[rfms_columns].apply(pd.to_numeric, errors='coerce')
+            self.df[rfms_columns] = self.df[rfms_columns].apply(lambda x: (x - x.min()) / (x.max() - x.min()))
+            logging.info('RFMS normalization successful, resulting dataframe shape: %s', self.df.shape)
+        except Exception as e:
+            logging.error('Error normalizing RFMS: %s', e)
+        
+        return self.df
