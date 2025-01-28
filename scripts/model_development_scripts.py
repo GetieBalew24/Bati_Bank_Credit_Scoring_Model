@@ -40,3 +40,11 @@ class ModelEvaluator:
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
         )
+    def split_data(self, test_size=0.2, random_state=42):
+        """Split the data into training and testing sets."""
+        X = self.data.drop(columns=[self.target_column])  # Remove only the target column
+        y = self.data[self.target_column]
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+        logging.info("Data split into training and testing sets.")
+        return self.X_train, self.X_test, self.y_train, self.y_test
+  
