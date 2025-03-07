@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder, StandardScaler, MinMaxScaler
+from sklearn.impute import KNNImputer
+import logging
 
 class FeatureEngineering:
     def __init__(self, df):
@@ -11,6 +13,8 @@ class FeatureEngineering:
             df (pd.DataFrame): The input DataFrame to be processed.
         """
         self.df = df
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+        logging.info("FeatureEngineering initialized with DataFrame of shape %s", df.shape)
 
     def remove_high_missing_values(self, threshold=0.5):
         """
@@ -24,11 +28,11 @@ class FeatureEngineering:
         """
         missing_percentage = self.df.isnull().mean()
         if (missing_percentage > threshold).any():
-            print("Columns with missing values more than threshold:")
-            print(missing_percentage[missing_percentage > threshold])
+            logging.info("Columns with missing values more than threshold:")
+            logging.info(missing_percentage[missing_percentage > threshold])
             self.df.drop(columns=missing_percentage[missing_percentage > threshold].index, inplace=True)
         else:
-            print("No columns found with missing values more than threshold.")
+            logging.info("No columns found with missing values more than threshold.")
         return self.df
 
     def create_aggregate_features(self):
@@ -38,6 +42,7 @@ class FeatureEngineering:
         Returns:
             pd.DataFrame: DataFrame with new aggregate feature columns.
         """
+        logging.info("Creating aggregate features.")
         self.df['Total_Transaction_Amount'] = self.df.groupby('CustomerId')['Amount'].transform('sum')
         self.df['Avg_Transaction_Amount'] = self.df.groupby('CustomerId')['Amount'].transform('mean')
         self.df['Transaction_Count'] = self.df.groupby('CustomerId')['TransactionId'].transform('count')
@@ -51,25 +56,28 @@ class FeatureEngineering:
         Returns:
             pd.DataFrame: DataFrame with new temporal feature columns.
         """
+        logging.info("Extracting temporal features.")
         self.df['Transaction_Hour'] = self.df['TransactionStartTime'].dt.hour
         self.df['Transaction_Day'] = self.df['TransactionStartTime'].dt.day
         self.df['Transaction_Month'] = self.df['TransactionStartTime'].dt.month
         self.df['Transaction_Year'] = self.df['TransactionStartTime'].dt.year
         return self.df
 
-    def handle_missing_values(self, method='imputation', strategy='mean', numerical_cols=None, categorical_cols=None):
+    def handle_missing_values(self, method='imputation', strategy='mean', numerical_cols=None, categorical_cols=None, n_neighbors=5):
         """
         Handles missing values in the DataFrame using specified methods.
 
         Args:
             method (str): The method to handle missing values ('imputation' or 'removal').
-            strategy (str): The strategy for imputation ('mean', 'median', or 'mode').
+            strategy (str): The strategy for imputation ('mean', 'median', 'mode', or 'knn').
             numerical_cols (list, optional): List of numerical columns to process.
             categorical_cols (list, optional): List of categorical columns to process.
+            n_neighbors (int): Number of neighbors to use for KNN imputation (default is 5).
 
         Returns:
             pd.DataFrame: DataFrame after handling missing values.
         """
+        logging.info("Handling missing values using method: %s", method)
         if numerical_cols is None:
             numerical_cols = self.df.select_dtypes(include=['float64', 'int']).columns.tolist()
         
@@ -78,13 +86,17 @@ class FeatureEngineering:
 
         # Handle numerical missing values
         if method == 'imputation':
-            for col in numerical_cols:
-                if strategy == 'mean':
-                    self.df[col].fillna(self.df[col].mean(), inplace=True)
-                elif strategy == 'median':
-                    self.df[col].fillna(self.df[col].median(), inplace=True)
-                elif strategy == 'mode':
-                    self.df[col].fillna(self.df[col].mode().iloc[0], inplace=True)
+            if strategy == 'knn':
+                imputer = KNNImputer(n_neighbors=n_neighbors)
+                self.df[numerical_cols] = imputer.fit_transform(self.df[numerical_cols])
+            else:
+                for col in numerical_cols:
+                    if strategy == 'mean':
+                        self.df[col].fillna(self.df[col].mean(), inplace=True)
+                    elif strategy == 'median':
+                        self.df[col].fillna(self.df[col].median(), inplace=True)
+                    elif strategy == 'mode':
+                        self.df[col].fillna(self.df[col].mode().iloc[0], inplace=True)
         elif method == 'removal':
             self.df.dropna(subset=numerical_cols, inplace=True)
 
@@ -93,7 +105,7 @@ class FeatureEngineering:
             if method == 'imputation':
                 self.df[col].fillna(self.df[col].mode().iloc[0], inplace=True)  # Filling with mode for categorical
             elif method == 'removal':
-                self.df.dropna(subset=categorical_cols, inplace=True)
+                self.df.dropna(subset=[col], inplace=True)
 
         return self.df
 
@@ -107,6 +119,7 @@ class FeatureEngineering:
         Returns:
             pd.DataFrame: DataFrame after encoding categorical variables.
         """
+        logging.info("Encoding categorical variables using method: %s", encoding_type)
         if encoding_type == 'onehot':
             self.df = pd.get_dummies(self.df, columns=['ProviderId', 'ProductId', 'ProductCategory', 'ChannelId'], drop_first=False)
             # Ensure only boolean columns are converted to integers
@@ -154,24 +167,27 @@ class FeatureEngineering:
         
         return self.df
 
-    def scale_numerical_features(self, scaling_type='normalization'):
+    def scale_numerical_features(self, scaling_type='normalization', numerical_cols=None):
         """
         Scales numerical features using the specified scaling method.
 
         Args:
             scaling_type (str): The scaling method ('normalization' or 'standardization').
+            numerical_cols (list, optional): List of numerical columns to scale.
 
         Returns:
             pd.DataFrame: DataFrame after scaling numerical features.
         """
-        numeric_cols = ['Amount', 'Value', 'Total_Transaction_Amount', 'Avg_Transaction_Amount', 'Std_Transaction_Amount']
+        logging.info("Scaling numerical features using method: %s", scaling_type)
+        if numerical_cols is None:
+            numerical_cols = self.df.select_dtypes(include=['float64', 'int']).columns.tolist()
         
         if scaling_type == 'normalization':
             scaler = MinMaxScaler()
         elif scaling_type == 'standardization':
             scaler = StandardScaler()
 
-        self.df[numeric_cols] = scaler.fit_transform(self.df[numeric_cols])
+        self.df[numerical_cols] = scaler.fit_transform(self.df[numerical_cols])
         return self.df
 
     def run_feature_engineering(self):
@@ -181,6 +197,7 @@ class FeatureEngineering:
         Returns:
             pd.DataFrame: Final DataFrame after all feature engineering steps.
         """
+        logging.info("Running full feature engineering pipeline.")
         self.remove_high_missing_values(threshold=0.5)
         self.create_aggregate_features()
         self.extract_temporal_features()
@@ -188,6 +205,7 @@ class FeatureEngineering:
         self.encode_categorical_variables(encoding_type='onehot')
         self.scale_numerical_features(scaling_type='normalization')
         return self.df
+
     def save_processed_data(self, file_path):
         """
         Saves the processed DataFrame to a specified file path.
@@ -196,4 +214,4 @@ class FeatureEngineering:
             file_path (str): The file path to save the processed DataFrame.
         """
         self.df.to_csv(file_path, index=False)
-        print(f"Processed data saved to {file_path}")
+        logging.info("Processed data saved to %s", file_path)
