@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
 import os
+from scipy.stats import zscore
 
 # Ensure the log directory exists
 log_dir = "../log"
@@ -33,6 +34,7 @@ class ExploratoryDataAnalysis:
         """
         logging.info("Fetching the first five rows of the DataFrame.")
         return self.df.head()
+
     def dataset_overview(self):
         """
         Displays an overview of the dataset, including the number of rows,
@@ -46,6 +48,7 @@ class ExploratoryDataAnalysis:
         print(self.df.dtypes)
         print("\nFirst 5 rows of the dataset:")
         print(self.df.head())
+
     def summary_statistics(self):
         """
         Displays summary statistics for numerical columns in the dataset.
@@ -53,6 +56,7 @@ class ExploratoryDataAnalysis:
         logging.info("Calculating summary statistics.")
         print("\nSummary Statistics:")
         print(self.df.describe())
+
     def plot_numerical_distribution(self, numerical_cols):
         """
         Visualizes the distribution of numerical features using histograms with and without 
@@ -99,8 +103,17 @@ class ExploratoryDataAnalysis:
                 plt.xlabel(col)
                 plt.ylabel('Count')
                 plt.show()
+
+                # Print value counts and percentage distribution
+                value_counts = self.df[col].value_counts()
+                percentage_distribution = self.df[col].value_counts(normalize=True) * 100
+                print(f"\nValue Counts for {col}:")
+                print(value_counts)
+                print(f"\nPercentage Distribution for {col}:")
+                print(percentage_distribution)
             except Exception as e:
                 logging.error("Error plotting categorical distribution for column %s: %s", col, e)
+
     def correlation_analysis(self):
         """
         Performs correlation analysis on numerical features and visualizes
@@ -123,10 +136,13 @@ class ExploratoryDataAnalysis:
         """
         logging.info("Analyzing missing values.")
         missing_values = self.df.isnull().sum()
+        missing_percentage = (missing_values / len(self.df)) * 100
         print("\nMissing Values Analysis:")
         print(missing_values)
+        print("\nMissing Values Percentage:")
+        print(missing_percentage)
         logging.info("Missing values per column: %s", missing_values.to_dict())
-    
+
     def outlier_detection(self, numerical_cols):
         """
         Detects and visualizes outliers in numerical columns using box plots.
@@ -139,6 +155,11 @@ class ExploratoryDataAnalysis:
                 plt.title(f'Boxplot of {col}')
                 plt.ylabel(col)
                 plt.show()
+
+                # Statistical outlier detection using Z-score
+                z_scores = zscore(self.df[col])
+                outliers = self.df[np.abs(z_scores) > 3]
+                print(f"\nOutliers in {col} (Z-score > 3):")
+                print(outliers)
             except Exception as e:
                 logging.error("Error detecting outliers for column %s: %s", col, e)
-
