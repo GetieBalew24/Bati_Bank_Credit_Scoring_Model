@@ -44,11 +44,31 @@ class ModelEvaluator:
 
     def split_data(self, test_size=0.2, random_state=42):
         """Split the data into training and testing sets."""
-        X = self.data.drop(columns=[self.target_column, 'CustomerId'])
-        y = self.data[self.target_column]
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-        logging.info("Data split into training and testing sets.")
-        return self.X_train, self.X_test, self.y_train, self.y_test
+        try:
+            # Ensure the target column exists in the dataset
+            if self.target_column not in self.data.columns:
+                raise KeyError(f"Target column '{self.target_column}' not found in the dataset.")
+
+            # Drop the target column to create features (X)
+            X = self.data.drop(columns=[self.target_column], errors="ignore")
+
+            # If 'CustomerId' exists, drop it as well (optional)
+            if 'CustomerId' in self.data.columns:
+                X = X.drop(columns=['CustomerId'], errors="ignore")
+
+            # Define the target variable (y)
+            y = self.data[self.target_column]
+
+            # Split the data into training and testing sets
+            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+                X, y, test_size=test_size, random_state=random_state
+            )
+            logging.info("Data split into training and testing sets.")
+            return self.X_train, self.X_test, self.y_train, self.y_test
+
+        except Exception as e:
+            logging.error(f"Error during data splitting: {str(e)}")
+            raise e
 
     def train_logistic_regression(self):
         """Train a Logistic Regression model with hyperparameter tuning using GridSearchCV."""

@@ -1,0 +1,4 @@
+2025-03-11 21:12:17,261 - INFO - Logging setup complete. Logs will be saved to: ../logs/model_evaluator_2025-03-11_21-12-17.log
+2025-03-11 21:12:17,262 - INFO - ModelEvaluator initialized.
+2025-03-11 21:12:17,291 - INFO - MLflow experiment 'Model_Evaluation' initialized.
+2025-03-11 21:12:19,905 - INFO - Data split into training and testing sets.
