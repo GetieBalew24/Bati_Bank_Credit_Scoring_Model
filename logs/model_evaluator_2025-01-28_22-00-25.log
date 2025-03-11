@@ -1,3 +1,0 @@
-2025-01-28 22:00:25,944 - INFO - ModelEvaluator initialized.
-2025-01-28 22:00:25,979 - INFO - MLflow experiment 'Model_Evaluation' initialized.
-2025-01-28 22:00:28,756 - INFO - Data split into training and testing sets.
