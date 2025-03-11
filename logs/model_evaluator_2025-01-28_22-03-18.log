@@ -1,4 +1,0 @@
-2025-01-28 22:03:18,145 - INFO - ModelEvaluator initialized.
-2025-01-28 22:03:18,176 - INFO - MLflow experiment 'Model_Evaluation' initialized.
-2025-01-28 22:03:21,398 - INFO - Data split into training and testing sets.
-2025-01-28 22:03:21,409 - INFO - Starting GridSearchCV...
